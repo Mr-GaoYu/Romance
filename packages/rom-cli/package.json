@@ -1,0 +1,24 @@
+{
+  "name": "rom-cli",
+  "private": true,
+  "scriptName": "rom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "rom": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0",
+    "pnpm": ">=6"
+  },
+  "dependencies": {
+    "rom-cli-init": "workspace:^1.0.0"
+  }
+}
