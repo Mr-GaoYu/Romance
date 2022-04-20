@@ -5,12 +5,14 @@ importers:
   .:
     specifiers:
       chalk: ^4.1.0
+      figures: ^4.0.1
       rom-cli: ^1.0.0
       semver: ^7.1.1
       update-notifier: ^5.1.0
       yargs: ~15.0.2
     dependencies:
       chalk: 4.1.2
+      figures: 4.0.1
       rom-cli: link:packages/rom-cli
       semver: 7.3.7
       update-notifier: 5.1.0
@@ -200,6 +202,19 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  /escape-string-regexp/5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /figures/4.0.1:
+    resolution: {integrity: sha512-rElJwkA/xS04Vfg+CaZodpso7VqBknOYbzi6I76hI4X80RUjkSxO2oAyPmGbuXUppywjqndOrQDl817hDnI++w==}
+    engines: {node: '>=12'}
+    dependencies:
+      escape-string-regexp: 5.0.0
+      is-unicode-supported: 1.2.0
+    dev: false
+
   /find-up/4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
@@ -325,6 +340,11 @@ packages:
 
   /is-typedarray/1.0.0:
     resolution: {integrity: sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=}
+    dev: false
+
+  /is-unicode-supported/1.2.0:
+    resolution: {integrity: sha512-wH+U77omcRzevfIG8dDhTS0V9zZyweakfD01FULl97+0EHiJTTZtJqxPSkIIo/SDPv/i07k/C9jAPY+jwLLeUQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /is-yarn-global/0.3.0:

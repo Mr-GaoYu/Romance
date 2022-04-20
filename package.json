@@ -13,6 +13,7 @@
   "packageManager": "pnpm@6.26.1",
   "dependencies": {
     "chalk": "^4.1.0",
+    "figures": "^4.0.1",
     "rom-cli": "^1.0.0",
     "semver": "^7.1.1",
     "update-notifier": "^5.1.0",
