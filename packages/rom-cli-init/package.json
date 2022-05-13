@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "rom-cli-utils": "workspace:^1.0.0"
+  }
 }

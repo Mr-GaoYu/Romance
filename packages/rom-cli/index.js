@@ -3,15 +3,16 @@
 const semver = require('semver');
 const chalk = require('chalk');
 const updateNotifier = require('update-notifier');
-
 const {
   scriptName,
   engines: {
-    node: nodeVersion
+    node: requiredNodeVersion
   },
   name: pkgName,
   version: pkgVersion
 } = require('./package.json');
+
+
 
 function setProcess(scriptName) {
   process.title = scriptName;
@@ -26,19 +27,19 @@ function setProcess(scriptName) {
   });
 }
 
-function checkNodeVersion(version, name) {
-  if (!semver.satisfies(process.version, version)) {
+function checkNodeVersion(wanted, id) {
+  if (!semver.satisfies(process.version, wanted)) {
     console.error(
-      'You are using Node ' + process.version + ', but this version of ' + name +
-      ' requires ' + chalk.yellow('Node ' + version) + '.\nPlease upgrade your Node version.'
+      'You are using Node ' + process.version + ', but this version of ' + id +
+      ' requires ' + chalk.yellow('Node ' + wanted) + '.\nPlease upgrade your Node version.'
     );
     process.exit(1);
   }
 }
 
 function upNotifier(version, name) {
+  let notifier;
   if (version && name) {
-    // 检测版本更新
     notifier = updateNotifier({
       pkg: {
         name,
@@ -67,7 +68,7 @@ function execCommand() {
   }
 
   if (['-h', '--help'].includes(cmdName)) {
-    console.log(`For more information, visit ${chalk.cyan('https://ecomfe.github.io/rom-cli')}`);
+    console.log(`For more information, visit ${chalk.cyan('https://github.com/Mr-GaoYu/Romance.git')}`);
     return;
   }
 
@@ -75,34 +76,37 @@ function execCommand() {
     console.error(
       `No command is given, you can install any ${chalk.cyan('rom-cli-*')} package to install a command`
     );
-    return;
+
+    return
   }
 
   try {
-    const pkgName = `rom-cli-${cmdName}`;
-    const command = require(pkgName);
+    const subCommands = [`rom-cli-${cmdName}`]
+    for (let i = 0, len = subCommands.length; i < len; i++) {
+      const subPkgName = subCommands[i];
+      const command = require(subPkgName);
+      if (command && command.command) {
+        const {
+          name,
+          version
+        } = require(`${subPkgName}/package.json`);
+        console.log(`${pkgName}@${pkgVersion}/${name}@${version}`);
 
-    if (command && command.command) {
-      const {
-        name,
-        version
-      } = require(`${pkgName}/package.json`);
-      console.log(`${pkgName}@${pkgVersion}/${name}@${version}`);
+        upNotifier(version, name);
 
-      upNotifier(version, name)
+        require('yargs')
+          .scriptName(scriptName)
+          .usage('$0 <cmd> [args]')
+          .command(command)
+          .help()
+          .alias('help', 'h')
+          .alias('version', 'v').argv;
 
-      require('yargs')
-        .scriptName(scriptName)
-        .usage('$0 <cmd> [args]')
-        .command(command)
-        .help()
-        .alias('help', 'h')
-        .alias('version', 'v').argv;
+        break;
+      }
     }
-
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND' && error.requireStack && error.requireStack[0] === require.resolve(__filename)) {
-      // 没找到
       console.error(chalk.red(`[${cmdName}] command not found, you may install san-cli-${cmdName}`));
     } else {
       console.error(error);
@@ -112,7 +116,5 @@ function execCommand() {
 }
 
 setProcess(scriptName);
-
-checkNodeVersion(nodeVersion, pkgName);
-
-execCommand()
+checkNodeVersion(requiredNodeVersion, pkgName);
+execCommand();

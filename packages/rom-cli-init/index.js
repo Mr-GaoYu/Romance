@@ -54,30 +54,28 @@ exports.builder = {
   }
 };
 
+const defaultTemplate = 'wanwu/san-project#v4';
 
 exports.handler = argv => {
+  const {
+    warn
+  } = require('rom-cli-utils/ttyLogger');
   let {
     template,
     appName
   } = argv;
-  console.log(argv, 123)
 
   if (template && appName === undefined) {
 
-    if (isTemplatePath(template)) {
-
-    } else {
-      appName = template;
-      template = defaultTemplate;
-    }
-
   } else if (template === undefined) {
-    console.log(12312)
+    template = defaultTemplate;
+    appName = './';
+    warn(`Use ${defaultTemplate} as scaffold template.`);
   }
 
   const options = Object.assign(argv, {
     template,
     appName
   });
-  require('./run')(template, appName, options)
+  require('./run')(template, appName, options);
 }

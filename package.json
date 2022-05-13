@@ -12,11 +12,18 @@
   },
   "packageManager": "pnpm@6.26.1",
   "dependencies": {
+    "address": "^1.2.0",
     "chalk": "^4.1.0",
-    "figures": "^4.0.1",
+    "figures": "^3.1.0",
+    "fs-extra": "^10.1.0",
+    "hash-sum": "^2.0.0",
+    "import-lazy": "^4.0.0",
+    "node-ipc": "^9.1.1",
+    "read-pkg": "^7.1.0",
     "rom-cli": "^1.0.0",
     "semver": "^7.1.1",
     "update-notifier": "^5.1.0",
+    "user-home": "^3.0.0",
     "yargs": "~15.0.2"
   }
 }
