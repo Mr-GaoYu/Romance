@@ -6,7 +6,7 @@ const address = importLazy('address');
 const home = require('user-home');
 
 const fse = importLazy('fs-extra');
-const {chalk} = re
+const {chalk} = require('./ttyLogger');
 
 exports.isLocalPath = templatePath => {
     return /^[./]|(^[a-zA-Z]:)/.test(templatePath);
