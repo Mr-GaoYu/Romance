@@ -1,5 +1,13 @@
 const fs = require('fs-extra');
-const {isLocalPath, getLocalTplPath} = require('rom-cli-utils/path');
+const path = require('path');
+const {
+  isLocalPath,
+  getLocalTplPath
+} = require('rom-cli-utils/path');
+const prompt = require('../utils/prompt');
+const {
+  chalk
+} = require('rom-cli-utils/ttyLogger');
 
 function Task() {
   this.skipInfo = [];
@@ -30,13 +38,61 @@ const checkStatus = (template, dest, options) => {
       if (options.force) {
         task.info('--force delete target directory');
         fs.remove(dest);
+      } else if (options._inPlace) {
+        task.info();
+
+        const {
+          ok
+        } = await prompt([{
+          name: 'ok',
+          type: 'confirm',
+          message: 'Are you sure to create a project in the current directory?'
+        }]);
+
+        if (!ok) {
+          return;
+        }
+      } else {
+        task.info();
+        const shortDest = path.relative(process.cwd(), dest);
+        const {
+          action
+        } = await prompt([{
+          name: 'action',
+          type: 'select',
+          // eslint-disable-next-line
+          message: `The directory ${chalk.cyan(
+                  shortDest
+              )} already exists. Please select an operation：`,
+          choices: [{
+              title: 'overwrite',
+              value: 'overwrite'
+            },
+            {
+              title: 'merge',
+              value: 'merge'
+            },
+            {
+              title: 'cancel',
+              value: false
+            }
+          ]
+        }]);
+
+        if (!action) {
+          return task.error(`Cancel overwrite ${shortDest} directory`);
+
+        } else if (action === 'overwrite') {
+          task.info(`Overwrite selected, first delete ${shortDest}...`);
+          await fs.remove(dest);
+        }
       }
     }
 
     task.info('Check the status of the offline template');
     const isOffline = options.offline;
 
-    if(isOffline || isLocalPath(template)){
+    if (isOffline || isLocalPath(template)) {
 
     }
     task.complete();
@@ -45,4 +101,7 @@ const checkStatus = (template, dest, options) => {
 
 let task = new Task();
 
-checkStatus('https://github.com/yyt/HelloWorld.git', 'none', {})({}, task)
+
+checkStatus('https://github.com/yyt/HelloWorld.git', './temp', {
+  _inPlace: false
+})({}, task)
