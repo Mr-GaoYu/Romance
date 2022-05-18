@@ -9,26 +9,7 @@ const {
   chalk
 } = require('rom-cli-utils/ttyLogger');
 
-function Task() {
-  this.skipInfo = [];
-  this.nextInfo = [];
-  this.res = '';
-  this.skip = data => {
-    this.skipInfo.push(data);
-  };
-  this.info = data => {
-    this.nextInfo.push(data);
-  };
-  this.error = err => {
-    this.res = err;
-  };
-  this.complete = () => {
-    this.res = 'done';
-  };
-}
-
-
-const checkStatus = (template, dest, options) => {
+module.exports = (template, dest, options) => {
   return async (ctx, task) => {
     task.info('Start checking target directory status');
 
@@ -93,15 +74,22 @@ const checkStatus = (template, dest, options) => {
     const isOffline = options.offline;
 
     if (isOffline || isLocalPath(template)) {
+      const templatePath = getLocalTplPath(template);
+      if (fs.existsSync(templatePath)) {
+        // 添加本地 template 路径
+        ctx.localTemplatePath = templatePath;
+      } else {
+        // 直接使用本地的路径进行复制
+        const localAbsolutePath = path.resolve(template);
+        if (fs.existsSync(localAbsolutePath)) {
+          // 使用本地路径直接复制
+          ctx.localTemplatePath = localAbsolutePath;
+          return task.complete();
+        }
 
+        return task.error('Offline scaffolding template path does not exist');
+      }
     }
     task.complete();
   }
 }
-
-let task = new Task();
-
-
-checkStatus('https://github.com/yyt/HelloWorld.git', './temp', {
-  _inPlace: false
-})({}, task)
