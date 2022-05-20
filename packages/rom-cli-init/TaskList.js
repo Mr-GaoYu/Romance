@@ -5,6 +5,44 @@ const {
   chalk
 } = require('rom-cli-utils/ttyLogger');
 
+class Task {
+  constructor(taskListInstance, taskFn) {
+      this.taskListInstance = taskListInstance;
+      this.status = '';
+      this.taskFn = taskFn;
+  }
+  getContext() {
+      return this.taskListInstance.getContext();
+  }
+  run() {
+      this.status = 'running';
+      this.taskFn(this.getContext(), this);
+  }
+  skip(skipReason) {
+      this.status = 'skiped'; // running failed
+      this.taskListInstance.next(skipReason);
+  }
+  complete() {
+      if (this.status === 'running') {
+          this.status = 'done';
+          this.taskListInstance.next();
+      }
+  }
+  error(err) {
+      if (this.status === 'running') {
+          this.status = 'failed';
+          this.taskListInstance.fail(err);
+      }
+  }
+  info(data) {
+      if (data) {
+          this.taskListInstance.startSpinner(data);
+      } else {
+          this.taskListInstance.stopSpinner();
+      }
+  }
+}
+
 module.exports = class TaskList {
   constructor(tasks, options = {}) {
     this._tasks = tasks;
@@ -21,8 +59,22 @@ module.exports = class TaskList {
     });
   }
 
-  stopSpinner() {
+  startSpinner(text) {
+    if (this._spinner.isSpinning) {
+      this._spinner.text = text;
+    } else {
+      this._spinner.start(text);
+    }
+  }
 
+  stopSpinner() {
+    if (this._spinner) {
+      this._spinner.stop();
+    }
+  }
+
+  getContext() {
+    return this._context;
   }
 
   _setStatus(status) {
@@ -52,30 +104,47 @@ module.exports = class TaskList {
     this._status = status;
   }
 
-  _startTask(idx, skipReason) {
-    let {
-      title,
-      task
-    } = this._tasks[idx];
+  run() {
+    this._setStatus('running');
+    this._startTask(0);
+    return this._promise;
+  }
 
+  _startTask(idx, skipReason) {
+    let {title, task} = this._tasks[idx];
     this.stopSpinner();
     const p = `[${this._index + 1}/${this._tasksLength}]`;
-
     if (skipReason) {
-      console.log(chalk.dim(`${new Array(p.length + 1).join(' ')} ${figures.arrowRight} ${skipReason}`));
+        // eslint-disable-next-line no-console
+        console.log(chalk.dim(`${new Array(p.length + 1).join(' ')} ${figures.arrowRight} ${skipReason}`));
     }
-
+    // eslint-disable-next-line no-console
     console.log(chalk.dim(p) + ` ${title}`);
 
     if (!this._spinner) {
-      this._spinner = ora('In processing...', {
-        spinner: 'point'
-      }).start();
+        this._spinner = ora('In processing...', {spinner: 'point'}).start();
     }
+    new Task(this, task).run();
   }
 
-  run() {
-    this._setStatus('running');
-    return this._promise;
+  done() {
+    this.stopSpinner()
+    this._resolve(this._context)
+  }
+
+  fail(err) {
+    this.stopSpinner();
+    this._reject(err);
+  }
+
+  next(skipReason) {
+    this._index++;
+    if (this._index >= this._tasksLength) {
+      // 完成了
+      this._setStatus('done');
+      this.done();
+    } else {
+      this._startTask(this._index, skipReason);
+    }
   }
 }

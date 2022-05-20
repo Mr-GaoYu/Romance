@@ -20,6 +20,8 @@
     "figures": "^3.1.0",
     "fs-extra": "^10.1.0",
     "git-clone": "^0.1.0",
+    "handlebars": "^4.7.7",
+    "handlebars-delimiters": "^1.0.0",
     "hash-sum": "^2.0.0",
     "import-lazy": "^4.0.0",
     "node-ipc": "^9.1.1",
