@@ -21,6 +21,7 @@ module.exports = (prompts, presets) => {
           continue;
       }
 
+
       const preset = presets[key];
 
       if (!preset) {
