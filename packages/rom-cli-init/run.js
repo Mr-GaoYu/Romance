@@ -4,7 +4,7 @@ const checkStatus = require('./tasks/checkStatus');
 const TaskList = require('./TaskList');
 const Handlebars = require('./handlerbars');
 const consolidate = require('consolidate');
-const {timeCost} = require('rom-cli-utils/utils');
+const { timeCost } = require('rom-cli-utils/utils');
 
 
 function logMessage(message, data) {
@@ -46,20 +46,20 @@ module.exports = (template, appName, options = {}) => {
 
       if (typeof opts.complete === 'function') {
         opts.complete(data, {
-            chalk,
-            logger: {
-                boxen,
-                error,
-                fatal,
-                success
-            },
-            files: []
+          chalk,
+          logger: {
+            boxen,
+            error,
+            fatal,
+            success
+          },
+          files: []
         });
-    }
-    else {
+      }
+      else {
         logMessage(opts.completeMessage, data);
-    }
-    process.exit(0);
+      }
+      process.exit(0);
     })
     .catch(e => {
       error(e);

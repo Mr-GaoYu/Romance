@@ -1,5 +1,11 @@
+const path = require('path')
+
+
+// 扁平化数组
 exports.flatten = arr => (arr || []).reduce((prev, curr) => prev.concat(curr), []);
 
+
+// 返回文件夹目录的路径
 exports.isDirectoryAndNotCwd = p => {
   if (p && typeof p === 'string') {
     const abs = path.resolve(p);
@@ -14,6 +20,8 @@ exports.isDirectoryAndNotCwd = p => {
   return false;
 };
 
+
+// 模板字符串替换
 exports.tmpl = (tpl = '', data = {}) => {
   if (typeof tpl !== 'string') {
     throw new TypeError('tmpl parameter type error');
@@ -24,6 +32,8 @@ exports.tmpl = (tpl = '', data = {}) => {
   return tpl.replace(/\{\{(\w+)\}\}/g, (word, key) => data[key]);
 };
 
+
+// 获取耗时时长，精确到两位
 exports.timeCost = (startTime, decimals = 2) => {
   const duration = new Date() - new Date(startTime);
   return (duration / 1e3).toFixed(decimals);
