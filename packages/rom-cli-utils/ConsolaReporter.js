@@ -1,10 +1,9 @@
 const figures = require('figures');
 const chalk = require('chalk');
 const stringWidth = require('string-width');
-const {FancyReporter} = require('consola');
-const {chalkColor, chalkBgColor} = require('./color');
+const { FancyReporter } = require('consola');
+const { chalkColor, chalkBgColor } = require('./color');
 const COMMON_COLOR = require('./color').COMMON_COLOR;
-
 
 const TYPE_ICONS = {
   info: figures('ℹ'),
@@ -17,6 +16,8 @@ const TYPE_ICONS = {
   fatal: figures('☒'),
   log: ''
 };
+
+
 const TYPE_COLOR_MAP = {
   success: COMMON_COLOR,
   info: COMMON_COLOR,
@@ -37,7 +38,7 @@ const LEVEL_COLOR_MAP = {
 consola.success('Built!')
 consola.info('Reporter: Some info')
 
-module.exports =  class ConsolaReporter extends FancyReporter {
+module.exports = class ConsolaReporter extends FancyReporter {
   formatType(logObj, isBadge) {
     const typeColor = logObj.badgeColor ||
       TYPE_COLOR_MAP[logObj.type] ||

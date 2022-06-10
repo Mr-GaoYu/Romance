@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs');
 
 
 // 扁平化数组
@@ -43,7 +44,6 @@ const clearRequireCache = (id, map = new Map()) => {
   const module = require.cache[id];
   if (module) {
     map.set(id, true);
-    // Clear children modules
     module.children.forEach(child => {
       if (!map.get(child.id)) {
         clearRequireCache(child.id, map);
