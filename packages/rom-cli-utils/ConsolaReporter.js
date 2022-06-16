@@ -35,8 +35,7 @@ const LEVEL_COLOR_MAP = {
   3: 'green'
 };
 
-consola.success('Built!')
-consola.info('Reporter: Some info')
+
 
 module.exports = class ConsolaReporter extends FancyReporter {
   formatType(logObj, isBadge) {
