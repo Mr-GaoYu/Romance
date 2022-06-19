@@ -10,6 +10,8 @@ const figures = require('figures');
 
 const perfDebug = debug('rom-cli:perf');
 
+console.log(process.env.CONSOLA_LEVEL,111)
+
 module.exports =  class SanConsola extends Consola {
   constructor(options = {}) {
     options = Object.assign({
@@ -35,16 +37,12 @@ module.exports =  class SanConsola extends Consola {
         if (!start) {
           return;
         }
-        // debug 输出
         let d = Date.now() - start;
         if (d >= 1e3) {
-          // red
           d = chalk.redBright.bold(`${d}ms`);
         } else if (d >= 3e2) {
-          // warn
           d = chalk.yellowBright.bold(`${d}ms`);
         } else {
-          // green
           d = chalk.greenBright(`${d}ms`);
         }
         this.log(`${chalk.grey(figures.play)} ${name}: ${d}`);

@@ -1,8 +1,13 @@
 const figures = require('figures');
 const chalk = require('chalk');
 const stringWidth = require('string-width');
-const { FancyReporter } = require('consola');
-const { chalkColor, chalkBgColor } = require('./color');
+const {
+  FancyReporter
+} = require('consola');
+const {
+  chalkColor,
+  chalkBgColor
+} = require('./color');
 const COMMON_COLOR = require('./color').COMMON_COLOR;
 
 const TYPE_ICONS = {

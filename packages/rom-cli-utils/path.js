@@ -31,7 +31,6 @@ exports.findExisting = (files, context) => {
     }
 };
 
-// ref @vue/cli-shared-utils prepareurls
 exports.prepareUrls = (protocol, host, port, pathname = '/') => {
     const formatUrl = hostname =>
         url.format({

@@ -14,7 +14,10 @@ exports.chalk = chalk;
 exports.ora = importLazy('ora');
 exports.figures = importLazy('figures');
 
+
 const logger = new Consola();
+
+
 [
   'fatal',
   'ready',
@@ -32,6 +35,7 @@ const logger = new Consola();
 ].forEach(k => {
   exports[k] = logger[k];
 });
+
 exports.logger = logger;
 
 logger.getScopeLogger = (scope, level = process.env.CONSOLA_LEVEL) => {
@@ -67,6 +71,7 @@ exports.line = msg => {
   console.log();
 };
 
+// 清除控制台记录，返回到终端开始位置
 exports.clearConsole = () => {
   if (process.stdout.isTTY) {
     const blank = '\n'.repeat(process.stdout.rows);

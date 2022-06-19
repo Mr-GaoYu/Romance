@@ -11,5 +11,3 @@ module.exports = class SError extends Error {
 
   }
 };
-
-new module.exports()
