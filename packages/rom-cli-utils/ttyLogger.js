@@ -17,7 +17,6 @@ exports.figures = importLazy('figures');
 
 const logger = new Consola();
 
-
 [
   'fatal',
   'ready',

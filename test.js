@@ -1,18 +1,8 @@
-function c() {
-    console.log('c')
-    console.trace();
+const Consola = require('consola').Consola;
 
-}
-
-function b(){
-    console.log('b')
-    c()
-}
-
-function a(){
-    console.log('a')
-    b()
-
-}
-
-a()
+const consola = new Consola({
+    level: 5,
+    reporters: [
+        reporter
+    ]
+})
