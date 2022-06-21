@@ -10,7 +10,6 @@ const figures = require('figures');
 
 const perfDebug = debug('rom-cli:perf');
 
-console.log(process.env.CONSOLA_LEVEL,111)
 
 module.exports =  class SanConsola extends Consola {
   constructor(options = {}) {
