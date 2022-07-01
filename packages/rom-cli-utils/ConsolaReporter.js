@@ -41,7 +41,6 @@ const LEVEL_COLOR_MAP = {
 };
 
 
-
 module.exports = class ConsolaReporter extends FancyReporter {
   formatType(logObj, isBadge) {
     const typeColor = logObj.badgeColor ||

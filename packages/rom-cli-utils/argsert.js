@@ -74,6 +74,7 @@ function argumentTypeError(observedType, allowedTypes, position, optional) {
         )} but received ${observedType}.`
     );
 }
+
 function parseCommand(cmd) {
     const extraSpacesStrippedCommand = cmd.replace(/\s{2,}/g, ' ');
     const splitCommand = extraSpacesStrippedCommand.split(/\s+(?![^[]*]|[^<]*>)/);

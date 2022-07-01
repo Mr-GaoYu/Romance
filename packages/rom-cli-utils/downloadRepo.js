@@ -1,15 +1,15 @@
 const gitclone = require('git-clone');
 const fse = require('fs-extra');
-const {getDebugLogger} = require('./ttyLogger');
-const {getGitUser} = require('./env');
-const {chalk} = require('./ttyLogger');
+const { getDebugLogger } = require('./ttyLogger');
+const { getGitUser } = require('./env');
+const { chalk } = require('./ttyLogger');
 
 const debug = getDebugLogger('init:download-repo');
 
 module.exports = (repo, dest, options) => {
     repo = normalize(repo, options);
-    const {url, checkout = '', timeout = 60e3} = repo;
-    const {template, appName} = options;
+    const { url, checkout = '', timeout = 60e3 } = repo;
+    const { template, appName } = options;
     const rm = fse.removeSync;
     // 先删除
     rm(dest);
@@ -31,12 +31,12 @@ module.exports = (repo, dest, options) => {
                 );
             }, timeout);
         }
-        gitclone(url, dest, {checkout, shallow: checkout === 'master' || !checkout}, err => {
+        gitclone(url, dest, { checkout, shallow: checkout === 'master' || !checkout }, err => {
             tid && clearTimeout(tid);
 
             if (!err) {
                 rm(`${dest}/.git`);
-                resolve({url, dest, checkout});
+                resolve({ url, dest, checkout });
             }
             else {
                 reject(
@@ -53,8 +53,9 @@ module.exports = (repo, dest, options) => {
         });
     });
 };
+
 function getErrorMessage(reason, gitInfo) {
-    let {url, appName} = gitInfo;
+    let { url, appName } = gitInfo;
     const isSSH = /^((?:ssh:\/\/|git@).+?)(?:#(.+))?$/.test(url);
     const cmd = 'init';
     const info = `${isSSH
@@ -81,6 +82,7 @@ Default template is ${chalk.cyan('wanwu/san-project')}, Use ${chalk.cyan('san in
     //     return info;
     // }
 }
+
 function normalize(repo, opts) {
     // https://username@icode.baidu.com/baidu/foo/bar
     // ssh://username@icode.baidu.com:8235/baidu/foo/bar
@@ -97,7 +99,7 @@ function normalize(repo, opts) {
     // 公司名/目录名/repo#分支
     const regex = /^(?:(icode|github|gitlab|bitbucket|coding):)?(?:(baidu)\/)?(?:([^/]+)\/)?([^#]+)(?:#(.+))?$/;
     const useSSH = opts.ssh || false;
-    const {name, isBaidu} = getGitUser();
+    const { name, isBaidu } = getGitUser();
     // 如果是 是百度，则强制使用百度账号
     const user = isBaidu ? name : opts.username !== '' && opts.username ? opts.username : 'git';
 

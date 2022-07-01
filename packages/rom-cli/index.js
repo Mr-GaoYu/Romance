@@ -25,6 +25,7 @@ function setProcess(scriptName) {
     console.error(error);
     process.exit(1);
   });
+  
 }
 
 function checkNodeVersion(wanted, id) {
