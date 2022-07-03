@@ -1,24 +1,20 @@
 {
   "name": "rom-cli",
-  "private": true,
-  "scriptName": "rom",
   "version": "1.0.0",
-  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "main": "index.js",
   "bin": {
     "rom": "index.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "license": "ISC",
   "engines": {
-    "node": "^14.13.1 || >=16.0.0",
-    "pnpm": ">=6"
+    "node": ">=16.13.2"
   },
+  "scriptName": "rom",
+  "keywords": [],
+  "license": "ISC",
   "dependencies": {
-    "rom-cli-init": "workspace:^1.0.0",
-    "semver": "^7.1.1",
-    "update-notifier": "^5.1.0"
+    "rom-cli-init": "workspace:^1.0.0"
   }
 }

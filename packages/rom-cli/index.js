@@ -1,21 +1,24 @@
-#!/usr/bin/env node
+/**
+ * 1. 设置环境变量
+ * 2. 检测Node版本
+ * 3. 脚手架命令
+ */
 
-const semver = require('semver');
-const chalk = require('chalk');
-const updateNotifier = require('update-notifier');
 const {
+  name: pkgName,
+  version: pkgVersion,
   scriptName,
   engines: {
-    node: requiredNodeVersion
-  },
-  name: pkgName,
-  version: pkgVersion
-} = require('./package.json');
+    node: nodeVersion
+  }
+} = require('./package.json')
+const semver = require('semver')
+const chalk = require('chalk')
+const updateNotifier = require('update-notifier')
 
+function setProcess() {
+  process.title = scriptName
 
-
-function setProcess(scriptName) {
-  process.title = scriptName;
   process.on('uncaughtException', error => {
     console.error(error);
     process.exit(1);
@@ -25,10 +28,9 @@ function setProcess(scriptName) {
     console.error(error);
     process.exit(1);
   });
-  
 }
 
-function checkNodeVersion(wanted, id) {
+function checkNodeVersion(id, wanted) {
   if (!semver.satisfies(process.version, wanted)) {
     console.error(
       'You are using Node ' + process.version + ', but this version of ' + id +
@@ -41,6 +43,7 @@ function checkNodeVersion(wanted, id) {
 function upNotifier(version, name) {
   let notifier;
   if (version && name) {
+    // 检测版本更新
     notifier = updateNotifier({
       pkg: {
         name,
@@ -48,10 +51,10 @@ function upNotifier(version, name) {
       },
       updateCheckInterval: 1000 * 60 * 60 * 24 * 7, // 1 week
       isGlobal: true,
-
       shouldNotifyInNpmScript: true
     });
   }
+  // 程序终止监听
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
       notifier && notifier.notify();
@@ -61,28 +64,28 @@ function upNotifier(version, name) {
 }
 
 function execCommand() {
-  const cmdName = process.argv[2];
-
-  if (['-v', '-V', '--version'].includes(cmdName)) {
-    console.log(pkgVersion);
+  const cmdName = process.argv[2]
+  // 帮助文档  rom -h || rom -H || rom --help
+  if (['-h', '-H', '--help'].includes(cmdName)) {
+    console.log(`For more information, visit ${chalk.cyan('https://github.com/Mr-GaoYu/Romance.git')}`);
     return;
   }
 
-  if (['-h', '--help'].includes(cmdName)) {
-    console.log(`For more information, visit ${chalk.cyan('https://github.com/Mr-GaoYu/Romance.git')}`);
-    return;
+  // 版本号  rom -v || rom -V || rom --version
+  if (['-v', '-V', '--version'].includes(cmdName)) {
+    console.log(pkgVersion)
+    return
   }
 
   if (!cmdName || cmdName.startsWith('-')) {
     console.error(
       `No command is given, you can install any ${chalk.cyan('rom-cli-*')} package to install a command`
     );
-
-    return
+    return;
   }
 
   try {
-    const subCommands = [`rom-cli-${cmdName}`]
+    const subCommands = [`rom-cli-${cmdName}`];
     for (let i = 0, len = subCommands.length; i < len; i++) {
       const subPkgName = subCommands[i];
       const command = require(subPkgName);
@@ -91,10 +94,7 @@ function execCommand() {
           name,
           version
         } = require(`${subPkgName}/package.json`);
-        console.log(`${pkgName}@${pkgVersion}/${name}@${version}`);
-
-        upNotifier(version, name);
-
+        upNotifier(version, name)
         require('yargs')
           .scriptName(scriptName)
           .usage('$0 <cmd> [args]')
@@ -106,16 +106,17 @@ function execCommand() {
         break;
       }
     }
-  } catch (error) {
-    if (error.code === 'MODULE_NOT_FOUND' && error.requireStack && error.requireStack[0] === require.resolve(__filename)) {
-      console.error(chalk.red(`[${cmdName}] command not found, you may install san-cli-${cmdName}`));
+
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND' && e.requireStack && e.requireStack[0] === require.resolve(__filename)) {
+      console.error(chalk.red(`[${cmdName}] command not found, you may install rom-cli-${cmdName}`));
     } else {
-      console.error(error);
+      console.error(e);
     }
     process.exit(1);
   }
 }
 
-setProcess(scriptName);
-checkNodeVersion(requiredNodeVersion, pkgName);
-execCommand();
+setProcess()
+checkNodeVersion(pkgName, nodeVersion)
+execCommand()
