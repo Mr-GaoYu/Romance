@@ -1,8 +1,11 @@
+#!/usr/bin/env node
+
 /**
  * 1. 设置环境变量
  * 2. 检测Node版本
  * 3. 脚手架命令
  */
+
 
 const {
   name: pkgName,
@@ -102,6 +105,7 @@ function execCommand() {
           .help()
           .alias('help', 'h')
           .alias('version', 'v').argv;
+
 
         break;
       }

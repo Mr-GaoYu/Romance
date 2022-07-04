@@ -36,6 +36,6 @@
     "strip-ansi": "^6.0.0",
     "update-notifier": "^5.1.0",
     "user-home": "^3.0.0",
-    "yargs": "~15.0.2"
+    "yargs": "^17.5.1"
   }
 }
